@@ -6,15 +6,20 @@
 #
 use strict;
 use warnings;
-use Number::RangeTracker;
 use autodie;
 use feature 'say';
+use Getopt::Long;
+use Number::RangeTracker;
 
-my $positions_file = "positions.txt";
-my $vcf_file = "head.vcf";
-my $flank_length = 150;
+my ( $positions_file, $vcf_file, $flank_length );
 
-my %positions;
+my $options = GetOptions(
+    "positions_file=s" => \$positions_file,
+    "vcf_file=s"       => \$vcf_file,
+    "flank_length=i"   => \$flank_length,
+);
+
+die unless defined $positions_file && defined $vcf_file && $flank_length > 0;
 
 my %ranges;
 open my $positions_fh, "<", $positions_file;
@@ -22,7 +27,7 @@ while (<$positions_fh>) {
     chomp;
     my ( $chr, $pos ) = split;
     $ranges{$chr} = RangeTracker->new unless exists $ranges{$chr};
-    $ranges{$chr}->add_range( $pos - 150, $pos + 150 );
+    $ranges{$chr}->add_range( $pos - $flank_length, $pos + $flank_length );
 }
 close $positions_fh;
 
