@@ -26,7 +26,7 @@ open my $positions_fh, "<", $positions_file;
 while (<$positions_fh>) {
     chomp;
     my ( $chr, $pos ) = split;
-    $ranges{$chr} = RangeTracker->new unless exists $ranges{$chr};
+    $ranges{$chr} = Number::RangeTracker->new unless exists $ranges{$chr};
     $ranges{$chr}->add_range( $pos - $flank_length, $pos + $flank_length );
 }
 close $positions_fh;
