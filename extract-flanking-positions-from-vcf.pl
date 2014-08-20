@@ -9,7 +9,7 @@ use warnings;
 use autodie;
 use feature 'say';
 use Getopt::Long;
-use Number::RangeTracker;
+use Number::RangeTracker 0.6.0;
 
 my ( $positions_file, $vcf_file, $flank_length );
 
@@ -27,7 +27,7 @@ while (<$positions_fh>) {
     chomp;
     my ( $chr, $pos ) = split;
     $ranges{$chr} = Number::RangeTracker->new unless exists $ranges{$chr};
-    $ranges{$chr}->add_range( $pos - $flank_length, $pos + $flank_length );
+    $ranges{$chr}->add( $pos - $flank_length, $pos + $flank_length );
 }
 close $positions_fh;
 
